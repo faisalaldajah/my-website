@@ -27,7 +27,7 @@ jobs:
           node -e "
           import fetch from 'node-fetch';
           const url = 'https://username.github.io/project-name/';
-          const searchText = 'Welcome';
+          const searchText = 'Yazan Khaled';
           const res = await fetch(url);
           const html = await res.text();
           if (html.includes(searchText)) {
