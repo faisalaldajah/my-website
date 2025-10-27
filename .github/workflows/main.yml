@@ -1,39 +1,26 @@
-name: Check Website Text
+name: Check index.html Text
 
 on:
-  schedule:
-    - cron: "0 * * * *" # كل ساعة
-  workflow_dispatch: # تقدر تشغله يدوي
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   check-text:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install node-fetch
-
-      - name: Run text check
+      - name: Check for specific text in index.html
         run: |
-          node -e "
-          import fetch from 'node-fetch';
-          const url = 'https://username.github.io/project-name/';
-          const searchText = 'Yazan Khaled';
-          const res = await fetch(url);
-          const html = await res.text();
-          if (html.includes(searchText)) {
-            console.log('✅ النص موجود');
-          } else {
-            console.error('❌ النص مش موجود');
-            process.exit(1);
-          }
-          "
+          TEXT_TO_FIND="مرحبا" # غيّرها للنص اللي بدك تبحث عنه
+          FILE_PATH="index.html"
+
+          if grep -q "$TEXT_TO_FIND" "$FILE_PATH"; then
+            echo "✅ النص '$TEXT_TO_FIND' موجود في $FILE_PATH"
+          else
+            echo "❌ النص '$TEXT_TO_FIND' مش موجود في $FILE_PATH"
+            exit 1
+          fi
