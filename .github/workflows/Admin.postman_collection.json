@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "81c57832-eaaa-419b-8d90-513c94b5a500",
+		"name": "Admin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "30792687"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This script is designed to validate the JSON response from an API endpoint.\r",
+									"// It performs a series of tests to ensure the response is well-formed,\r",
+									"// contains the correct data, and adheres to a predefined schema.\r",
+									"\r",
+									"// Test for the HTTP response status code\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    // Asserts that the response status code is 200 (OK).\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for overall JSON structure and data using a schema\r",
+									"pm.test(\"JSON Schema is valid\", function () {\r",
+									"    // Parse the response body from a string to a JavaScript object.\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    // Define the JSON schema for the response.\r",
+									"    // This schema enforces types, required fields, and specific values.\r",
+									"    // 'additionalProperties: false' ensures no unexpected fields are present.\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"username\": {\r",
+									"                \"type\": \"string\",\r",
+									"                \"enum\": [\"emilys\"] // Strict check for the exact value\r",
+									"            },\r",
+									"            \"password\": {\r",
+									"                \"type\": \"string\",\r",
+									"                \"enum\": [\"emilyspass\"] // Strict check for the exact value\r",
+									"            }\r",
+									"        },\r",
+									"        \"required\": [\"username\", \"password\"],\r",
+									"        \"additionalProperties\": false\r",
+									"    };\r",
+									"\r",
+									"    // Validate the response data against the defined schema using the tv4 library.\r",
+									"    // The test will pass if the JSON data is valid according to the schema.\r",
+									"    const validationResult = tv4.validate(jsonData, schema);\r",
+									"\r",
+									"    // If validation fails, log the error for easier debugging.\r",
+									"    if (!validationResult) {\r",
+									"        console.log(\"Schema validation error:\", tv4.error);\r",
+									"    }\r",
+									"    \r",
+									"    // Assert that the validation was successful.\r",
+									"    pm.expect(validationResult, \"Schema validation failed\").to.be.true;\r",
+									"});\r",
+									"\r",
+									"// Perform individual, granular checks on field values and types\r",
+									"pm.test(\"Response body values and types are correct\", function () {\r",
+									"    // Parse the response body.\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    // Check the 'username' field\r",
+									"    // 1. Verify that 'username' is of type string.\r",
+									"    // 2. Verify that the value of 'username' is exactly \"emilys\".\r",
+									"    pm.expect(jsonData.username).to.be.a('string', \"Type of 'username' should be string\");\r",
+									"    pm.expect(jsonData.username).to.eql(\"emilys\", \"Value of 'username' is incorrect\");\r",
+									"\r",
+									"    // Check the 'password' field\r",
+									"    // 1. Verify that 'password' is of type string.\r",
+									"    // 2. Verify that the value of 'password' is exactly \"emilyspass\".\r",
+									"    pm.expect(jsonData.password).to.be.a('string', \"Type of 'password' should be string\");\r",
+									"    pm.expect(jsonData.password).to.eql(\"emilyspass\", \"Value of 'password' is incorrect\");\r",
+									"});\r",
+									"\r",
+									"// Check for an 'id' field and save it to an environment variable if it exists.\r",
+									"// Note: The provided JSON does not contain an 'id', so this code block\r",
+									"// will not execute but is included for robustness as per the requirements.\r",
+									"pm.test(\"Save 'id' to environment variable if it exists\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    // Safely check if the 'id' property exists at the top level of the response.\r",
+									"    if (jsonData && jsonData.hasOwnProperty('id')) {\r",
+									"        // If it exists, save its value to an environment variable named 'generated_entity_id'.\r",
+									"        pm.environment.set(\"generated_entity_id\", jsonData.id);\r",
+									"        console.log(\"Saved generated_entity_id:\", jsonData.id);\r",
+									"    } else {\r",
+									"        // Log a message if the 'id' is not found. This test will still pass.\r",
+									"        console.log(\"No 'id' field found in the response to save.\");\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3NjEzMDY3MzUsImV4cCI6MTc2MTMwNzMzNX0.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3NjEzMDc1NjUsImV4cCI6MTc2MTMwODE2NX0.o1Qog9i5lZ9EtAAEBQNG0sUYlKu7oTR--PCRzCHHDVY"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"emilys\",\r\n    \"password\": \"emilyspass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://dummyjson.com/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "user details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://dummyjson.com/auth/me"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "height",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "weight",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
