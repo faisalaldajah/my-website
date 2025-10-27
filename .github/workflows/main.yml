@@ -15,7 +15,7 @@ jobs:
 
       - name: Check for specific text in index.html
         run: |
-          TEXT_TO_FIND="مرحبا" # غيّرها للنص اللي بدك تبحث عنه
+          TEXT_TO_FIND="Yazan Khaled" # غيّرها للنص اللي بدك تبحث عنه
           FILE_PATH="index.html"
 
           if grep -q "$TEXT_TO_FIND" "$FILE_PATH"; then
