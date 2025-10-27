@@ -1,36 +1,39 @@
-name: Run Postman Tests
+name: Check Website Text
 
 on:
+  schedule:
+    - cron: "0 * * * *" # كل ساعة
+  workflow_dispatch: # تقدر تشغله يدوي
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
 
 jobs:
-  newman-tests:
+  check-text:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
 
-      - name: Install Newman
-        run: npm install -g newman
+      - name: Install dependencies
+        run: npm install node-fetch
 
-      - name: Run Postman Collection
+      - name: Run text check
         run: |
-          newman run Admin.postman_collection.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
-
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: newman-report
-          path: newman-report.html
+          node -e "
+          import fetch from 'node-fetch';
+          const url = 'https://username.github.io/project-name/';
+          const searchText = 'Welcome';
+          const res = await fetch(url);
+          const html = await res.text();
+          if (html.includes(searchText)) {
+            console.log('✅ النص موجود');
+          } else {
+            console.error('❌ النص مش موجود');
+            process.exit(1);
+          }
+          "
